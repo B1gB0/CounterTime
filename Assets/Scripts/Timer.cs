@@ -1,7 +1,6 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class Timer : MonoBehaviour
 {
@@ -9,7 +8,6 @@ public class Timer : MonoBehaviour
 
     [SerializeField] private TMP_Text _text;
 
-    private bool _isWork = false;
     private int _counter;
     private Coroutine _coroutine;
 
@@ -17,19 +15,22 @@ public class Timer : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            _isWork = !_isWork;
-            OnChangeTime();
+            RestartCoroutine();
         }
     }
 
-    private void OnChangeTime()
+    private void RestartCoroutine()
     {
         if (_coroutine != null)
         {
             StopCoroutine(_coroutine);
-        }
 
-        _coroutine = StartCoroutine(LaunchTimer());
+            _coroutine = null;
+        }
+        else
+        {
+            _coroutine = StartCoroutine(LaunchTimer());
+        }
     }
 
     private void DisplayCountdown(int count)
@@ -41,7 +42,7 @@ public class Timer : MonoBehaviour
     {
         WaitForSeconds waitForSeconds = new(Delay);
 
-        while (_isWork)
+        while (enabled)
         {
             _counter++;
             DisplayCountdown(_counter);
